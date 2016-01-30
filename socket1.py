@@ -1,5 +1,9 @@
-a = [1, 3, 2]
-b = [11, 33, 22]
+          # This Python file uses the following encoding: windows-1251
 
-x = zip(b,a).sort()
-print x
+str2 = 'fsîðäîdf'
+str1 = u'Jean-Marc Vall\xe9e'
+str1 = str1.encode('utf-8')
+
+print type(str1)
+str3 = str1 + str2
+print str3

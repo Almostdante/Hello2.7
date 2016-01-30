@@ -1,15 +1,41 @@
+          # This Python file uses the following encoding: utf-8
+
 import urllib2
 import json
 import re
-
-
-
+import time
+global z
+z = 1
 
 
 def IMDB_Search(moviename, movieyear):
+    if moviename.startswith('Dal'):
+        return
+    moviename_ = re.sub(r"\s+", '+', moviename)
+    url = 'http://www.omdbapi.com/?t='+moviename_+'&y='+movieyear+'&plot=full&r=json'
+    urll = urllib2.Request(url)
+    urlll = urllib2.urlopen(urll)
+    urllll = urlll.read()
+    js = json.loads(urllll)
+    for x in js:
+       js[x] = js[x].encode('utf-8')
+    result1 = {}
+    if js.get('Error', 0) == 0:
+        result2 = [str('Title: '+moviename).ljust(50), str('Director: '+js['Director']).ljust(30), str('Rating: '+js['imdbRating']),  str('Votes: '+js['imdbVotes']).ljust(14), str('Metascore: '+js['Metascore'])]
+        result1 = {'Title':moviename, 'Director':js['Director'], 'Rating':round(js['imdbRating'], 1), 'Votes':js['imdbVotes'], 'Metascore':js['Metascore']}
+    else:
+        print moviename, 'Not Found'
+        return
+    print result1
+    return result1
+
+'''
+def IMDB_Search_old(moviename, movieyear):
     url  = 'http://www.imdb.com/xml/find?json=1&nr=1&tt=on&q='+moviename
+    print url
     urll = urllib2.urlopen(urllib2.Request(url)).read()
     js = json.loads(urll)
+    print js
     candidates = []
     for x in js.keys():
         for y in js[x]:
@@ -37,3 +63,6 @@ def IMDB_Search(moviename, movieyear):
             x['Meta_Rating'] = '0'
 #        print data
     return candidates
+'''
+
+#print IMDB_Search('crimson peak', '2015')
