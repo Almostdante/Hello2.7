@@ -4,9 +4,16 @@ test2 = [2, 4, 8, 6, 5, 7, 1, 3]
 test3 = [4, 8, 2, 6, 5]
 
 
-def qsort_first(arr, l, r):
+def qsort(arr, l, r, type):
     if len(arr[l:r]) <= 1:
         return
+    if type == 'last':
+        arr[l], arr[r-1] = arr[r-1], arr[l]
+    if type == 'med':
+        med_dict = {arr[l]: l, arr[r-1]: r-1, arr[(r-l+1)/2+l-1]: (r-l+1)/2+l-1}
+        med_dict_keys = med_dict.keys()
+        med_dict_keys.sort()
+        arr[l], arr[med_dict[med_dict_keys[1]]] = arr[med_dict[med_dict_keys[1]]], arr[l]
     global cnt
     cnt = cnt + r - l - 1
     i = l + 1
@@ -15,71 +22,16 @@ def qsort_first(arr, l, r):
             (arr[j], arr[i]) = (arr[i], arr[j])
             i += 1
     arr[l], arr[i-1] = arr[i-1], arr[l]
-    qsort_first(arr, l, i-1)
-    qsort_first(arr, i, r)
+    qsort(arr, l, i-1, type)
+    qsort(arr, i, r, type)
     return
 
-
-def qsort_last(arr, l, r):
-    if len(arr[l:r]) <= 1:
-        return
-    arr[l], arr[r-1] = arr[r-1], arr[l]
-    global cnt
-    cnt = cnt + r - l - 1
-    i = l + 1
-    for j in range(l+1, r):
-        if arr[j] < arr[l]:
-            (arr[j], arr[i]) = (arr[i], arr[j])
-            i += 1
-    arr[l], arr[i-1] = arr[i-1], arr[l]
-    qsort_last(arr, l, i-1)
-    qsort_last(arr, i, r)
-    return
-
-
-def qsort_med(arr, l, r):
-    if len(arr[l:r]) <= 1:
-        return
-    med_dict = {arr[l]: l, arr[r-1]: r-1, arr[(r-l+1)/2+l-1]: (r-l+1)/2+l-1}
-    med_dict_keys = med_dict.keys()
-    med_dict_keys.sort()
-    arr[l], arr[med_dict[med_dict_keys[1]]] = arr[med_dict[med_dict_keys[1]]], arr[l]
-    global cnt
-    cnt = cnt + r - l - 1
-    i = l + 1
-    for j in range(l+1, r):
-        if arr[j] < arr[l]:
-            (arr[j], arr[i]) = (arr[i], arr[j])
-            i += 1
-    arr[l], arr[i-1] = arr[i-1], arr[l]
-    qsort_med(arr, l, i-1)
-    qsort_med(arr, i, r)
-    return
-
-test = []
-text = open('QuickSort1.txt').readlines()
-for x in text:
-    test.append(int(x))
-cnt = 0
-qsort_first(test, 0, len(test))
-print test
-print cnt
-
-test = []
-text = open('QuickSort1.txt').readlines()
-for x in text:
-    test.append(int(x))
-cnt = 0
-qsort_last(test, 0, len(test))
-print test
-print cnt
-
-
-test = []
-text = open('QuickSort1.txt').readlines()
-for x in text:
-    test.append(int(x))
-cnt = 0
-qsort_med(test, 0, len(test))
-print test
-print cnt
+for y in ['first', 'last', 'med']:
+    test = []
+    text = open('QuickSort1.txt').readlines()
+    for x in text:
+        test.append(int(x))
+    cnt = 0
+    qsort(test, 0, len(test), y)
+    print test
+    print cnt
