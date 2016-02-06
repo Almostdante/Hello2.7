@@ -31,7 +31,7 @@ t.add_row(['Title', 'Director', 'Rating', 'Votes', 'MS'])
 t.set_cols_width ([20,15,6,6,3])
 for x in listt:
     try:
-        t.add_row([x['Title'], x['Director'], round(x['Rating'], 1), x['Votes'], x['Metascore']])
+        t.add_row([x['Title'], x['Director'], x['Rating'],  x['Votes'], x['Metascore']])
     except:
         pass
 #text = ''

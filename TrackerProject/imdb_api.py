@@ -22,7 +22,7 @@ def IMDB_Search(moviename, movieyear):
     result1 = {}
     if js.get('Error', 0) == 0:
         result2 = [str('Title: '+moviename).ljust(50), str('Director: '+js['Director']).ljust(30), str('Rating: '+js['imdbRating']),  str('Votes: '+js['imdbVotes']).ljust(14), str('Metascore: '+js['Metascore'])]
-        result1 = {'Title':moviename, 'Director':js['Director'], 'Rating':round(js['imdbRating'], 1), 'Votes':js['imdbVotes'], 'Metascore':js['Metascore']}
+        result1 = {'Title':moviename, 'Director':js['Director'], 'Rating':js['imdbRating'], 'Votes':js['imdbVotes'], 'Metascore':js['Metascore']}
     else:
         print moviename, 'Not Found'
         return
