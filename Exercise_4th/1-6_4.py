@@ -1,4 +1,4 @@
-import isinst
+from Other import isinst
 import itertools
 
 n = 123
