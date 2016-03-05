@@ -5,13 +5,13 @@ import urllib2
 import re
 import datetime
 
-url = 'http://nnm-club.me/forum/tracker.php?f=954,885,912,227,661,218'
+search_url = 'http://nnm-club.me/forum/tracker.php?f=954,885,912,227,661,218'
 def parse_nnm():
     counter = open('counter', 'r')
     int_max = int(counter.readline())
     counter.close()
     headers = { 'User-Agent' : 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.151 Safari/535.19' }
-    req = urllib2.Request(url, '', headers)
+    req = urllib2.Request(search_url, '', headers)
     urll = urllib2.urlopen(req).read()
     soup = BeautifulSoup.BeautifulSoup(urll)
     a = soup.findAll('tr', {'class': 'prow1'})

@@ -90,3 +90,43 @@ for entry in all:
         ( name, album_id, genre_id, length, rating, count ) )
 
 conn.commit()
+
+
+
+#cur.executescript('''
+#DROP TABLE IF EXISTS Trackers;
+#CREATE TABLE `Trackers` (
+#	`ID`	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
+#	`Name`	TEXT NOT NULL,
+#	`LastID`	INTEGER
+#)
+#''')
+#cur.execute(" INSERT OR IGNORE INTO Trackers VALUES (1, 'Rutracker', 5118732) ")
+
+"""cur.executescript('''
+DROP TABLE IF EXISTS Movies;
+DROP TABLE IF EXISTS Torrents;
+
+CREATE TABLE `Movies` (
+	`ID`	INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE,
+	`Original_name`	TEXT UNIQUE,
+	`Russian_name`	TEXT,
+	`Director`	TEXT,
+	`Year`	INTEGER,
+	`IMDB_Rating`	REAL,
+	`IMDB_Votes`	INTEGER,
+	`Metascore`	INTEGER
+);
+
+CREATE TABLE `Torrents` (
+	`ID`	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
+	`MovieID`	INTEGER NOT NULL,
+	`TrackerID`	INTEGER NOT NULL,
+	`Link`	TEXT NOT NULL,
+	`Torrent_File`	TEXT,
+	`File_Size`	REAL,
+	`Subtitles`	TEXT,
+	`Resolution`	INTEGER
+);
+''')
+conn.commit()"""
