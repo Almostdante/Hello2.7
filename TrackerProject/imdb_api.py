@@ -14,12 +14,10 @@ def IMDB_Search(moviename, movieyear):
     urlll = urllib2.urlopen(url.encode("UTF-8")).read()
     js = json.loads(urlll)
     for x in js:
-        print x
         result1 = {}
         if js.get('Error', 0) == 0:
             result1 = {'Title':moviename, 'Director':js['Director'], 'Rating':js['imdbRating'], 'Votes':js['imdbVotes'], 'Metascore':js['Metascore'], 'IMDB_ID':js['imdbID']}
         else:
             print moviename, 'Not Found'
-            result1 = {'Title':moviename, 'Director':'-', 'Rating':'-', 'Votes':'-', 'Metascore':'-', 'IMDB_ID':'-'}
-    print result1
+            result1 = {'Title':moviename, 'Director':'-', 'Rating':'0', 'Votes':'-', 'Metascore':'-', 'IMDB_ID':'-'}
     return result1

@@ -1,7 +1,6 @@
 # This Python file uses the following encoding: utf-8
 
 import BeautifulSoup
-import urllib2
 import re
 import cookielib
 from urllib import urlencode, quote, unquote
@@ -11,7 +10,10 @@ import sqlite3
 
 credentials = {'login_username': u'cheshiremajor', 'login_password': u'ZNt,zK.,k.', 'login': u'Вход',}
 login_url = 'http://login.rutracker.org/forum/login.php'
-start_url = 'http://rutracker.org/forum/tracker.php?f=2198,2199,2201,2339,312,313'
+start_url = 'http://rutracker.org/forum/tracker.php?f=2198,2199,2201,2339,313'
+
+
+
 
 
 def dict_encode(dict, encoding='cp1251'):
@@ -50,6 +52,8 @@ def parse_rutracker():
             temp_torrent = {}
             torrent_time_class = y.findAll('td', {'class': 'row4 small nowrap'})
             torrent_time = re.search('''<u>(\d{10,10})''', str(torrent_time_class))
+            torrent_size_class = y.findAll('td', {'class': 'row4 small nowrap tor-size'})
+            torrent_size = re.search('''<u>(\d{9,11})''', str(torrent_size_class))
             torrent_ID = re.search('''viewtopic.php\?t\=(\d{7,7})''', xy)
             movie_name = re.search('''\d{7,7}\"\>(.+?)\(''', xy)
             year = re.search('\[(\d{4})', xy)
@@ -65,9 +69,15 @@ def parse_rutracker():
                 x = False
                 break
             if movie_name and year:
-                temp_torrent[u'torrent_ID'] = torrent_ID
+                temp_torrent[u'torrent_link'] = 'http://rutracker.org/forum/viewtopic.php?t=%s' % (torrent_ID, )
                 temp_torrent[u'Movie'] = movie_name.group(1).decode('utf-8')
                 temp_torrent[u'Year'] = year.group(1)
+                if torrent_size:
+                    torrent_size = round(int(torrent_size.group(1))/1073741824.0, 2)
+                else:
+                    torrent_size = '-'
+                temp_torrent[u'Size'] = torrent_size
+
             else:
                 continue
             int_result.append(temp_torrent)
@@ -75,5 +85,3 @@ def parse_rutracker():
     #conn.commit()
     return int_result
 
-test = parse_rutracker()
-print len(test), test
