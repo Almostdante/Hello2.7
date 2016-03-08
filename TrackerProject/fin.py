@@ -35,7 +35,6 @@ for x in all[:]:
     cur.execute("SELECT IMDB_rating FROM Movies WHERE Original_name = ?;", (x_name, ))
     rating = cur.fetchone()
     if not rating:
-        #print x[u'Movie'] + 'New'
         try:
             rate = (IMDB_Search(x_name, unicode(x[u'Year'])))
         except:
