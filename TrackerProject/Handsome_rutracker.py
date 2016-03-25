@@ -45,8 +45,12 @@ def parse_rutracker():
         next_search = re.search(r'search_id\=(\w+)', str(next))
         if next_search:
             search_ID = next_search.group(1)
-        search_url = 'http://rutracker.org/forum/tracker.php?search_id=%s&start=%s' % (search_ID, gap)
+            search_url = 'http://rutracker.org/forum/tracker.php?search_id=%s&start=%s' % (search_ID, gap)
+        else:
+            x = False
         gap += 50
+        if gap > 450:
+            break
         for y in topics:
             xy = str(y)
             temp_torrent = {}

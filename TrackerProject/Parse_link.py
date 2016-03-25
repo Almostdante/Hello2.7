@@ -4,7 +4,7 @@ import re
 import BeautifulSoup
 import urllib2
 link_rutr = 'http://dl.rutracker.org/forum/dl.php?t='
-link_nnm = 'http://nnm-club.me/forum/download.php?id='
+link_nnm = 'http://nnmclub.to/forum/download.php?id='
 test = [{u'torrent_link': 'http://nnm-club.me/forum/viewtopic.php?t=993600', u'Year': '2015', u'Movie': u'<b>\u041c\u0430\u043b\u044b\u0448 / Little Boy '}, {u'torrent_link': 'http://rutracker.org/forum/viewtopic.php?t=5182835', u'Movie': u'\u041f\u0438\u043d\u043e\u043a\u043a\u0438\u043e / Pinocchio ', u'Year': '2013'}]
 
 
@@ -33,7 +33,7 @@ def parse_link(link):
         duration = '-'
 #    subtitles = re.search(ur'убтитр\w+?\:*<\/span\>\:* (\w+?усск\w+?)\<', post, re.UNICODE)
     subtitles = re.search(ur'титр.{,70}(\w*?(усск|rus|Rus))', post, re.UNICODE)
-    subtitles1 = re.search(ur'(усск|rus|Rus).{,70}(\w*?титр\w*?)', post, re.UNICODE)
+    subtitles1 = re.search(ur'(усск|rus|Rus).{,18}(\w*?титр\w*?)', post, re.UNICODE)
 
     if subtitles:
         subtitles = 'Y'

@@ -17,6 +17,8 @@ def IMDB_Search(moviename, movieyear):
         result1 = {}
         if js.get('Error', 0) == 0:
             result1 = {'Title':moviename, 'Director':js['Director'], 'Rating':js['imdbRating'], 'Votes':js['imdbVotes'], 'Metascore':js['Metascore'], 'IMDB_ID':js['imdbID']}
+            if result1['Rating'] == 'N/A':
+                result1['Rating'] = 0
         else:
             print moviename, 'Not Found'
             result1 = {'Title':moviename, 'Director':'-', 'Rating':'0', 'Votes':'-', 'Metascore':'-', 'IMDB_ID':'-'}

@@ -7,10 +7,10 @@ from urllib import urlencode, quote, unquote
 from urllib2 import build_opener, HTTPCookieProcessor
 import sqlite3
 
-search_url = 'http://nnm-club.me/forum/tracker.php?f=954,885,912,227,661'
-login_url = 'http://nnm-club.me/forum/login.php'
+search_url = 'http://nnmclub.to/forum/tracker.php?f=954,885,912,227,661'
+login_url = 'http://nnmclub.to/forum/login.php'
 credentials = {'username': u'almostdante', 'password': u'Welcome2012', 'login': u'Вход',}
-next_page_url = 'http://nnm-club.me/forum/tracker.php?search_id=%s&start=%s'
+next_page_url = 'http://nnmclub.to/forum/tracker.php?search_id=%s&start=%s'
 
 
 def dict_encode(dict, encoding='cp1251'):
@@ -46,6 +46,8 @@ def parse_nnm():
             search_ID = next_search.group(1)
         url = next_page_url % (search_ID, gap)
         gap += 50
+        if gap > 450:
+            break
         for y in topics:
             xy = str(y)
             temp_torrent = {}
@@ -68,7 +70,7 @@ def parse_nnm():
                 x = False
                 break
             if movie_name and year and torrent_size:
-                temp_torrent[u'torrent_link'] = 'http://nnm-club.me/forum/viewtopic.php?t=%s' % (torrent_ID,)
+                temp_torrent[u'torrent_link'] = 'http://nnmclub.me/forum/viewtopic.php?t=%s' % (torrent_ID,)
                 temp_torrent[u'Movie'] = movie_name.group(1).decode('utf-8')
                 temp_torrent[u'Year'] = year.group(1)
                 if torrent_size:
