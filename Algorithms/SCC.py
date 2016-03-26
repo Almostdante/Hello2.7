@@ -1,24 +1,27 @@
-import random
 import datetime
 
-file = 'SCC_mini.txt'
-length = 20
+filename = 'SCC.txt'
+length = 875715
+huge_list = {}
+huge_list_rev = {}
+print datetime.datetime.now()
 
-def file_to_dict(file_name, rev):
-    file_lines = open(file_name).readlines()
-    graph_in_dict = {}
-    a, b = int(rev==0), int(rev<>0)
-    for edge in file_lines:
-        start_vertex = int(edge.split()[a])
-        end_vertex = int(edge.split()[b])
-        try:
-            graph_in_dict[start_vertex].append(end_vertex)
-        except:
-            graph_in_dict[start_vertex] = [end_vertex]
-    return graph_in_dict
+file_lines = open(filename).readlines()
+for edge in file_lines:
+    edge = edge.split()
+    start_vertex = int(edge[0])
+    end_vertex = int(edge[1])
+    try:
+        huge_list[start_vertex].append(end_vertex)
+    except:
+        huge_list[start_vertex] = [end_vertex]
+    try:
+        huge_list_rev[end_vertex].append(start_vertex)
+    except:
+        huge_list_rev[end_vertex] = [start_vertex]
 
-huge_list = file_to_dict(file, 0)
-exit_time = [0 for x in xrange (1, length)]
+
+exit_time = [0 for x in xrange (length)]
 y = 1
 temp_key_list = huge_list.keys()
 
@@ -29,12 +32,8 @@ for vertex in temp_key_list:
     current_route = []
     CurApp = current_route.append
     CurPop = current_route.pop
-    full_path = []
     current_vertex = vertex
     while True:
-        if y%10000 == 0:
-            print y, len(current_route)
-            print datetime.datetime.now()
         try:
             temp_list = huge_list[current_vertex]
         except:
@@ -44,6 +43,7 @@ for vertex in temp_key_list:
                 current_vertex = CurPop()
             except:
                 break
+            continue
         for m_next_vertex in temp_list:
             if exit_time[m_next_vertex]:
                 continue
@@ -59,51 +59,52 @@ for vertex in temp_key_list:
             except:
                 break
 
-huge_list = file_to_dict(file, 1)
-SCC_lens = []
-temp_key_list = huge_list.keys()
-exit_dict = {}
+exit_time2 = [0 for x in xrange (length)]
 k = 0
 for y in exit_time:
-    exit_dict[y] = k
+    exit_time2[y] = k
     k += 1
-del exit_dict[0]
-explored = []
-max = max(list(exit_dict))
+SCC_lens = []
 
-for x in xrange(max, 0, -1):
-    current_vertex = exit_dict[x]
-    len_scc = []
-    if x in explored:
+explored2 = [0 for x in xrange (length)]
+
+for x in xrange(length-1, 0, -1):
+    current_vertex = exit_time2[x]
+    len_scc = 0
+    if explored2[current_vertex]:
         continue
-    if len(SCC_lens)%1000 == 0:
-        print len(SCC_lens), len(explored)
     while True:
         try:
-            temp_list = huge_list[current_vertex]
+            temp_list = huge_list_rev[current_vertex]
         except:
-            explored.append(current_vertex)
-            len_scc.append(current_vertex)
-            if not current_route:
-                SCC_lens.append(len(len_scc))
+            explored2[current_vertex] = 1
+            len_scc += 1
+            try:
+                current_vertex = current_route.pop()
+            except:
                 break
-            current_vertex = current_route.pop()
             continue
         for m_next_vertex in temp_list:
-            try:
-                explored.index(m_next_vertex)
+            if explored2[m_next_vertex]:
                 continue
-            except:
-                explored.append(current_vertex)
+            else:
+                if not explored2[current_vertex]:
+                    len_scc += 1
+                    explored2[current_vertex] = 1
                 current_route.append(current_vertex)
                 current_vertex = m_next_vertex
                 break
         else:
-            explored.append(current_vertex)
-            len_scc.append(current_vertex)
-            if not current_route:
-                SCC_lens.append(len(len_scc))
+            if not explored2[current_vertex]:
+                explored2[current_vertex] = 1
+                len_scc += 1
+            try:
+                current_vertex = current_route.pop()
+            except:
                 break
-            current_vertex = current_route.pop()
+    SCC_lens.append(len_scc)
+
 SCC_lens.sort(reverse=True)
-print SCC_lens
+print sum(SCC_lens)
+print SCC_lens[:10]
+print datetime.datetime.now()
