@@ -7,7 +7,6 @@ from Watchlist_IMDB_Parse import Watchlist_Update
 import sqlite3
 from itertools import groupby
 from operator import itemgetter
-import unicodedata
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText

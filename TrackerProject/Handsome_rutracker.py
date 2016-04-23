@@ -81,7 +81,6 @@ def parse_rutracker():
                 else:
                     torrent_size = '-'
                 temp_torrent[u'Size'] = torrent_size
-
             else:
                 continue
             int_result.append(temp_torrent)
