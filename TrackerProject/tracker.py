@@ -132,7 +132,7 @@ class Tracker:
 rutracker = Tracker(1, 'rutracker.org')
 rutracker.credentials = {'login_username': u'cheshiremajor', 'login_password': u'ZNt,zK.,k.', 'login': u'Вход',}
 rutracker.login_url = 'http://login.%s/forum/login.php' % (rutracker.domain)
-rutracker.start_url = 'http://%s/forum/tracker.php?f=2198,2199,2201,2339,313,930' % (rutracker.domain)
+rutracker.start_url = 'http://%s/forum/tracker.php?f=2198,2199,2201,2339,313,930&o=1&tm=14' % (rutracker.domain)
 rutracker.how_to_find_topics = ('tr', {'class': 'tCenter hl-tr'})
 rutracker.how_to_find_time = ('td', {'class': 'row4 small nowrap'})
 rutracker.how_to_find_size = ('td', {'class': 'row4 small nowrap tor-size'})
@@ -148,7 +148,7 @@ rutracker.link_to_download
 nnmclub = Tracker(2, 'nnmclub.to')
 nnmclub.credentials = {'username': u'almostdante', 'password': u'Welcome2012', 'login': u'Вход',}
 nnmclub.login_url = 'http://%s/forum/login.php' % (nnmclub.domain)
-nnmclub.start_url = 'http://%s/forum/tracker.php?f=954,885,912,227,661' % (nnmclub.domain)
+nnmclub.start_url = 'http://%s/forum/tracker.php?f=954,885,912,227,661&o=1&tm=14' % (nnmclub.domain)
 nnmclub.how_to_find_topics = ('tr', {'class': ('prow1', 'prow2')})
 nnmclub.how_to_find_time = ('td', {'title': u'Добавлено'})
 nnmclub.how_to_find_size = ('td', {'class': 'gensmall'})
