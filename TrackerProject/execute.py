@@ -56,7 +56,6 @@ for m in (maillist_A, maillist_N):
     for name, rows in groupby(m.values()[0], itemgetter(0)):
         table = []
         for Name, Year, Director, IMDB_Rating, IMDB_Votes, Metascore, Subtitles, File_Size, Tracker_Link, Torrent_File in rows:
-            print Name, Year, Director, IMDB_Rating, IMDB_Votes, Metascore, Subtitles, File_Size, Tracker_Link, Torrent_File
             table.append(
                 "<tr><td>{}</td><td>{}</td><td>{}</td><td>{}</td><td>{}</td><td>{}</td><td>{}</td><td>{}</td><td>{}</td><td>{}</td><td></tr>".format(
                     Name, Year, Director, IMDB_Rating, IMDB_Votes, Metascore, Subtitles, File_Size, Tracker_Link, Torrent_File))
