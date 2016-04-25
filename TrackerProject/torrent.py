@@ -31,13 +31,11 @@ class Torrent:
         if self.Movie_id:
             try:
                 self.Rate, self.Director, self.IMDB_Votes, self.Metascore, self.Watched = tracker.select_untitled("IMDB_rating, Director, IMDB_Votes, Metascore, Watched", "Movies", "IMDB_ID = %s"%(self.Movie_id, ))[0]
-                return 1
             except:
                 return 0
         else:
             try:
                 self.Rate, self.Movie_id, self.Director, self.IMDB_Votes, self.Metascore, self.Watched = tracker.select_untitled("IMDB_rating, IMDB_ID, Director, IMDB_Votes, Metascore, Watched", "Movies", "Original_name = '%s'"%(self.Movie_name, ))[0]
-                return 1
             except:
                 return 0
         return self.Rate

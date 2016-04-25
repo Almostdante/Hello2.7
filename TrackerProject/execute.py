@@ -44,6 +44,8 @@ for y in list_of_torrents:
             list_of_movies.append(movie.Movie(y.Movie_name, y.Movie_year))
         if list_of_movies[-1].check_imdb():
             y.Movie_id, y.Rate, y.Director, y.IMDB_Votes, y.Metascore = list_of_movies[-1].IMDB_ID, list_of_movies[-1].IMDB_Rating, list_of_movies[-1].Director, list_of_movies[-1].IMDB_Votes, list_of_movies[-1].Metascore
+    elif y.Rate > 6.9:
+        y.parse_link()
     y.append_torrent_for_mail(maillist_A, maillist_N)
 
 for q in list_of_movies:
