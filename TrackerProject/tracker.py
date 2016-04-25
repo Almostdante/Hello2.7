@@ -10,7 +10,8 @@ import os
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 db_path = os.path.join(BASE_DIR, "Untitled.sqlite")
-
+my_IMDB_list = 'http://www.imdb.com/user/ur15497815/ratings?start=1&view=compact&sort=ratings_date:desc'
+mymail = ['almostdante@gmail.com']
 
 
 def dict_encode(dict, encoding='cp1251'):
@@ -24,14 +25,13 @@ def select_untitled(fields, tables, condition):
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
     cur.execute(" SELECT %s FROM %s WHERE %s;"%(fields, tables, condition))
-    result = cur.fetchone()[0]
+    result = cur.fetchall()
     conn.close()
     return result
 
 def update_untitled(fields, tables, condition):
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
-    print "UPDATE %s SET %s WHERE %s;"%(tables, fields, condition)
     cur.execute("UPDATE %s SET %s WHERE %s;"%(tables, fields, condition))
     conn.commit()
     conn.close()
@@ -40,11 +40,24 @@ def update_untitled(fields, tables, condition):
 def insert_untitled(tables, columns, values):
     conn = sqlite3.connect(db_path)
     cur = conn.cursor()
-    print "INSERT OR IGNORE INTO %s (%s) VALUES %s;"%(tables, columns, values)
     cur.execute("INSERT OR IGNORE INTO %s (%s) VALUES %s;"%(tables, columns, values))
     conn.commit()
     conn.close()
     return
+
+def Watchlist_Update():
+    count_of_watched = select_untitled("LastTime", "Trackers", "ID=3")[0][0]
+    cj = cookielib.CookieJar()
+    opener = build_opener(HTTPCookieProcessor(cj))
+    page = opener.open(my_IMDB_list)
+    soup = BeautifulSoup.BeautifulSoup(page)
+    list_of_films = soup.findAll('td', {'class': 'title'})
+    if len(list_of_films) - count_of_watched > 0:
+        for x in list_of_films:
+            update_untitled("Watched = 'Y'", "Movies", "IMDB_ID = '%s'"%(re.search('title\/(tt[0-9]*)', str(x)).group(1), ))
+        update_untitled("LastTime = %s "%((len(list_of_films)), ), "Trackers", "ID=3")
+    return
+
 
 
 
@@ -56,14 +69,15 @@ class Tracker:
         self.gap = 0
         self.page_size = 50
         self.current_last_time = 0
-        self.previous_last_time = select_untitled("LastTime", "Trackers", "ID=%s"%(self.ID, ))
+        self.previous_last_time = select_untitled("LastTime", "Trackers", "ID=%s"%(self.ID, ))[0][0]
+        print self.previous_last_time
 
     def readtime(self):
         print "Previous_time %s" % (self.previous_last_time)
         return self.previous_last_time
 
     def writetime(self):
-        update_untitled("LastTime", "Trackers", "Id=%s"%(self.id))
+        update_untitled("LastTime =%s"%(self.current_last_time), "Trackers", "Id=%s"%(self.ID))
         return
 
     def get_torrents(self):
@@ -91,23 +105,23 @@ class Tracker:
                     torrent_link = self.link_to_torrent_url + torrent_id
                     torrent_download_link = self.link_to_download + torrent_id
                     name_for_class = self.domain.strip()[0] + "_"+ torrent_id
+                    torrent_russian_name = str(torrent_title.contents[0]).split('(')[0].split('/')[0].strip('<b>')
                     for title in str(torrent_title.contents[0]).split('(')[0].split('/'):
                         if title.startswith('<'):
                             continue
                         if re.search('[a-zA-Z]+', title):
-                            int_result.append({u'torrent_link' : torrent_link, u'object_name' : name_for_class, u'download_link' : torrent_download_link, u'Movie': title.strip().decode('utf-8'), u'Year': torrent_movie_year, u'Size': torrent_size})
+                            int_result.append({u'Russian_name' : torrent_russian_name, 'torrent_link' : torrent_link, u'object_name' : name_for_class, u'download_link' : torrent_download_link, u'Movie': title.strip().decode('utf-8'), u'Year': torrent_movie_year, u'Size': torrent_size})
                 except:
                     print topic
                     continue
             self.gap += self.page_size
-            if self.gap > 40:
+            if self.gap > 400:
                 break
             next =  soup.findAll(self.how_to_find_next_page)
             next_search = re.search(r'search_id\=(\w+)', str(next))
             if next_search:
                 search_ID = next_search.group(1)
                 current_url = self.search_url % (search_ID, self.gap)
-                print current_url
             else:
                 x = False
         return int_result
@@ -145,21 +159,6 @@ nnmclub.search_url = 'http://nnmclub.to/forum/tracker.php?search_id=%s&start=%s'
 nnmclub.how_to_find_next_page = ('span', {'class': 'nav'})
 nnmclub.movie_year_regexp = '\((\d{4})\)'
 
-
-
-"""
-nnmclub.readtime()
-rutracker.readtime()
-temp = nnmclub.get_torrents()
-temp2 = rutracker.get_torrents()
-print len(temp)
-print len(temp2)
-for x in temp:
-    print x
-for x in temp2:
-    print x
-print temp + temp2
-"""
-
-
-
+if __name__ == '__main__':
+    print nnmclub.get_torrents()
+    Watchlist_Update()

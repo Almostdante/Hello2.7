@@ -1,5 +1,3 @@
-import tracker
-import torrent
 import re
 import urllib2
 import json
@@ -29,11 +27,16 @@ class Movie:
             js = json.loads(urlll)
         except:
             print "Error in OMDB API"
-            return
-        try:
-            self.Director = str(js['Director'])
-        except:
             return 0
+        try:
+            if js[u'Response'] == u'False':
+                return 0
+        except:
+            pass
+        try:
+            self.Director = str(js['Director']).encode('ascii', 'replace')
+        except:
+            print js
         try:
             self.IMDB_Rating = float(js['imdbRating'].replace(',', '.'))
         except:
@@ -46,8 +49,3 @@ class Movie:
         self.IMDB_ID = str(js['imdbID'])
 #        print self.Original_name + "Movie not found"
         return self.IMDB_Rating
-
-
-test = Movie('Star Wars', 2015)
-test.check_imdb()
-print test

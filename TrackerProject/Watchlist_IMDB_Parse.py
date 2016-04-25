@@ -23,7 +23,3 @@ def Watchlist_Update():
         cur.execute("UPDATE Trackers SET Lasttime = ? WHERE ID = 3;", (len(list_of_films), ))
     conn.commit()
     return
-
-
-#print list_of_films
-#print len(list_of_films)
