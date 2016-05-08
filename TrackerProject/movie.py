@@ -44,7 +44,10 @@ class Movie:
                 self.IMDB_Rating = float(js['imdbRating'])
             except:
                 self.IMDB_Rating = 0
-        self.IMDB_Votes = int(js['imdbVotes'].split(',')[0])
+        try:
+            self.IMDB_Votes = int(js['imdbVotes'].split(',')[0])
+        except:
+            self.IMDB_Votes = 0
         try:
             self.Metascore = int(js['Metascore'])
         except:
