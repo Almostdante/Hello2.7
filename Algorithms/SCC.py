@@ -4,10 +4,15 @@ filename = 'SCC.txt'
 length = 875715
 huge_list = {}
 huge_list_rev = {}
+exit_time = [0 for x in xrange(length)]
+exit_time2 = [0 for x in xrange(length)]
+explored2 = [0 for x in xrange (length)]
+SCC_lens = []
+
+
 print datetime.datetime.now()
 
-file_lines = open(filename).readlines()
-for edge in file_lines:
+for edge in open(filename):
     edge = edge.split()
     start_vertex = int(edge[0])
     end_vertex = int(edge[1])
@@ -20,12 +25,9 @@ for edge in file_lines:
     except:
         huge_list_rev[end_vertex] = [start_vertex]
 
-
-exit_time = [0 for x in xrange (length)]
-y = 1
 temp_key_list = huge_list.keys()
 
-
+y = 1
 for vertex in temp_key_list:
     if exit_time[vertex]:
         continue
@@ -59,18 +61,16 @@ for vertex in temp_key_list:
             except:
                 break
 
-exit_time2 = [0 for x in xrange (length)]
 k = 0
 for y in exit_time:
     exit_time2[y] = k
     k += 1
-SCC_lens = []
 
-explored2 = [0 for x in xrange (length)]
 
 for x in xrange(length-1, 0, -1):
     current_vertex = exit_time2[x]
     len_scc = 0
+    current_route = []
     if explored2[current_vertex]:
         continue
     while True:
@@ -80,7 +80,7 @@ for x in xrange(length-1, 0, -1):
             explored2[current_vertex] = 1
             len_scc += 1
             try:
-                current_vertex = current_route.pop()
+                current_vertex = CurPop()
             except:
                 break
             continue
@@ -88,23 +88,20 @@ for x in xrange(length-1, 0, -1):
             if explored2[m_next_vertex]:
                 continue
             else:
-                if not explored2[current_vertex]:
-                    len_scc += 1
-                    explored2[current_vertex] = 1
-                current_route.append(current_vertex)
+                explored2[current_vertex] = 1
+                CurApp(current_vertex)
                 current_vertex = m_next_vertex
                 break
         else:
-            if not explored2[current_vertex]:
-                explored2[current_vertex] = 1
-                len_scc += 1
+            explored2[current_vertex] = 1
+            len_scc += 1
             try:
-                current_vertex = current_route.pop()
+                current_vertex = CurPop()
             except:
                 break
     SCC_lens.append(len_scc)
 
 SCC_lens.sort(reverse=True)
+print datetime.datetime.now()
 print sum(SCC_lens)
 print SCC_lens[:10]
-print datetime.datetime.now()
