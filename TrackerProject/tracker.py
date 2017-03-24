@@ -131,7 +131,7 @@ class Tracker:
 
 rutracker = Tracker(1, 'rutracker.org')
 rutracker.credentials = {'login_username': u'cheshiremajor', 'login_password': u'ZNt,zK.,k.', 'login': u'Вход',}
-rutracker.login_url = 'http://login.%s/forum/login.php' % (rutracker.domain)
+rutracker.login_url = 'http://%s/forum/login.php' % (rutracker.domain)
 rutracker.start_url = 'http://%s/forum/tracker.php?f=2198,2199,2201,2339,313,930&o=1&tm=14' % (rutracker.domain)
 rutracker.how_to_find_topics = ('tr', {'class': 'tCenter hl-tr'})
 rutracker.how_to_find_time = ('td', {'class': 'row4 small nowrap'})
@@ -142,8 +142,6 @@ rutracker.how_to_find_name_year_id = ('a', {'class': ('med tLink hl-tags bold', 
 rutracker.search_url = 'http://rutracker.org/forum/tracker.php?search_id=%s&start=%s' #TODO: how to do double substitute
 rutracker.how_to_find_next_page = ('a', {'class': 'pg'})
 rutracker.movie_year_regexp = '\[(\d{4})'
-
-rutracker.link_to_download
 
 nnmclub = Tracker(2, 'nnmclub.to')
 nnmclub.credentials = {'username': u'almostdante', 'password': u'Welcome2012', 'login': u'Вход',}

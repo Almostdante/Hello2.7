@@ -9,12 +9,15 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from itertools import groupby
 from operator import itemgetter
+#import Watchlist_IMDB_Parse
 
+#Watchlist_IMDB_Parse.Watchlist_Update()
 
 fromaddr = 'almostdante@gmail.com'
 Me  = 'almostdante@gmail.com'
-She = 'vtonad@mail.ru'
-#She = 'admitrie@icloud.com'
+She = 'almostdante123@gmail.com'
+# She = 'vtonad@mail.ru'
+# She = 'admitrie@icloud.com'
 username = 'almostdante'
 password = 'haeytscqnadbomtv'
 maillist_A = {Me: []}
@@ -52,7 +55,9 @@ for q in list_of_movies:
     if q.IMDB_Rating:
         tracker.insert_untitled("Movies", "IMDB_ID, Original_name, Russian_name, Director, Year, IMDB_Rating, IMDB_Votes, Metascore", (q.IMDB_ID, q.Original_name, q.Russian_name, q.Director, q.Year, q.IMDB_Rating, q.IMDB_Votes, q.Metascore))
 
-for m in (maillist_A, maillist_N):
+#for m in (maillist_A, maillist_N):
+for m in (maillist_A, ):
+
     FULL_HTML = []
     today_list.sort()
     for name, rows in groupby(m.values()[0], itemgetter(0)):
