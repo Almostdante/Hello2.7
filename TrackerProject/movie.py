@@ -3,15 +3,15 @@ import urllib2
 import json
 
 class Movie:
-    def __init__(self, name, year, movie_id = ''):
+    def __init__(self, name, year, movie_id = '', Russian_name = ''):
         self.IMDB_ID = movie_id
         self.Original_name = name
-        self.Russian_name = ''
+        self.Russian_name = Russian_name
         self.Director = ''
         self.Year = year
         self.IMDB_Rating = 0
         self.IMDB_Votes = 0
-        self.Metascore = 0
+        self.Metascore = '--'
         self.Watched = ''
     def __str__(self):
         return '%s, %s, %s, %s, %s, %s, %s, '%(self.Original_name, self.Director, self.Year, self.IMDB_ID, self.IMDB_Rating, self.IMDB_Votes, self.Metascore)
@@ -34,14 +34,14 @@ class Movie:
         except:
             pass
         try:
-            self.Director = str(js['Director']).encode('ascii', 'replace')
+            self.Director = str(js['Director']).encode('ascii', 'ignore')
         except:
             print js
         try:
-            self.IMDB_Rating = float(js['imdbRating'].replace(',', '.'))
+            self.IMDB_Rating = round(float(js['imdbRating'].replace(',', '.')),1)
         except:
             try:
-                self.IMDB_Rating = float(js['imdbRating'])
+                self.IMDB_Rating = round(float(js['imdbRating']),1)
             except:
                 self.IMDB_Rating = 0
         try:

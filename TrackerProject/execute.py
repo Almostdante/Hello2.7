@@ -5,19 +5,15 @@ import tracker
 import torrent
 import movie
 import smtplib
+import datetime
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from itertools import groupby
 from operator import itemgetter
-#import Watchlist_IMDB_Parse
-
-#Watchlist_IMDB_Parse.Watchlist_Update()
 
 fromaddr = 'almostdante@gmail.com'
 Me  = 'almostdante@gmail.com'
-She = 'almostdante123@gmail.com'
-# She = 'vtonad@mail.ru'
-# She = 'admitrie@icloud.com'
+She = 'vtonad@mail.ru'
 username = 'almostdante'
 password = 'haeytscqnadbomtv'
 maillist_A = {Me: []}
@@ -38,36 +34,41 @@ for x in today_list:
     list_of_torrents.append(torrent.Torrent(x[u'Size'], x[u'torrent_link'], x[u'download_link'],  x[u'Year'], x[u'Movie'].encode('ascii','ignore'), x[u'Russian_name']))
 
 
+
 for y in list_of_torrents:
     if not y.check_in_db():
         y.parse_link()
         if y.Movie_id:
-            list_of_movies.append(movie.Movie(y.Movie_name, y.Movie_year, y.Movie_id))
+            y.check_in_db()
+            list_of_movies.append(movie.Movie(y.Movie_name, y.Movie_year, y.Movie_id, y.Movie_russian_name))
         else:
-            list_of_movies.append(movie.Movie(y.Movie_name, y.Movie_year))
+            list_of_movies.append(movie.Movie(y.Movie_name, y.Movie_year, Russian_name = y.Movie_russian_name))
         if list_of_movies[-1].check_imdb():
             y.Movie_id, y.Rate, y.Director, y.IMDB_Votes, y.Metascore = list_of_movies[-1].IMDB_ID, list_of_movies[-1].IMDB_Rating, list_of_movies[-1].Director, list_of_movies[-1].IMDB_Votes, list_of_movies[-1].Metascore
+            y.check_in_db()
     elif y.Rate > 6.9:
         y.parse_link()
     y.append_torrent_for_mail(maillist_A, maillist_N)
 
 for q in list_of_movies:
     if q.IMDB_Rating:
-        tracker.insert_untitled("Movies", "IMDB_ID, Original_name, Russian_name, Director, Year, IMDB_Rating, IMDB_Votes, Metascore", (q.IMDB_ID, q.Original_name, q.Russian_name, q.Director, q.Year, q.IMDB_Rating, q.IMDB_Votes, q.Metascore))
+        tracker.insert_untitled("Movies", "IMDB_ID, Original_name, Russian_name, Director, Year, IMDB_Rating, IMDB_Votes, Metascore, Updated", (q.IMDB_ID, q.Original_name, q.Russian_name, q.Director, q.Year, q.IMDB_Rating, q.IMDB_Votes, q.Metascore, str(datetime.datetime.now().date())))
 
 #for m in (maillist_A, maillist_N):
+maillist_A = {Me: sorted (maillist_A.values()[0], key=lambda t: (t[1], t[0]), reverse = True)}
+
 for m in (maillist_A, ):
 
     FULL_HTML = []
     today_list.sort()
     for name, rows in groupby(m.values()[0], itemgetter(0)):
         table = []
-        for Name, Year, Director, IMDB_Rating, IMDB_Votes, Metascore, Subtitles, File_Size, Tracker_Link, Torrent_File in rows:
+        for Name, Year, Director, IMDB_Rating, Metascore, Subtitles, Tracker_Link in rows:
             table.append(
-                "<tr><td>{}</td><td>{}</td><td>{}</td><td>{}</td><td>{}</td><td>{}</td><td>{}</td><td>{}</td><td>{}</td><td>{}</td><td></tr>".format(
-                    Name, Year, Director, IMDB_Rating, IMDB_Votes, Metascore, Subtitles, File_Size, Tracker_Link, Torrent_File))
+                "<tr><td>{}</td><td>{}</td><td>{}</td><td>{}</td><td>{}</td><td>{}</td><td>{}</td><td></tr>".format(
+                    Name, Year, Director, IMDB_Rating, Metascore, Subtitles, Tracker_Link))
 
-        table = '<table class="fixed"><col width="420px" />\n<col width="50px" />\n<col width="200px" />\n<col width="50px" />\n<col width="50px" />\n<col width="50px" />\n<col width="30px" />\n<col width="50px" />\n<col width="20px" />\n<col width="20px" />\n{}\n</table>'.format('\n'.join(table))
+        table = '<table class="fixed"><col width="540px" />\n<col width="50px" />\n<col width="180px" />\n<col width="70px" />\n<col width="30px" />\n<col width="50px" />\n<col width="60px" />\n{}\n</table>'.format('\n'.join(table))
         FULL_HTML.append(table)
     FULL_HTML = "<html>\n{}\n</html>".format('\n'.join(FULL_HTML))
 

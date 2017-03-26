@@ -45,6 +45,14 @@ def insert_untitled(tables, columns, values):
     conn.close()
     return
 
+def delete_untitled(fields, tables, condition):
+    conn = sqlite3.connect(db_path)
+    cur = conn.cursor()
+    cur.execute("DELETE FROM %s WHERE %s = %s;"%(tables, fields, condition))
+    conn.commit()
+    conn.close()
+    return
+
 def Watchlist_Update():
     count_of_watched = select_untitled("LastTime", "Trackers", "ID=3")[0][0]
     cj = cookielib.CookieJar()
@@ -52,10 +60,12 @@ def Watchlist_Update():
     page = opener.open(my_IMDB_list)
     soup = BeautifulSoup.BeautifulSoup(page)
     list_of_films = soup.findAll('td', {'class': 'title'})
-    if len(list_of_films) - count_of_watched > 0:
-        for x in list_of_films:
+    count_of_films_IMDB = soup.find('div', {'class': 'desc'})
+    count_of_films_IMDB = re.search('[0-9]+', str(count_of_films_IMDB)).group(0)
+    if int(count_of_films_IMDB) - count_of_watched > 0:
+        for x in list_of_films[:int(count_of_films_IMDB) - count_of_watched]:
             update_untitled("Watched = 'Y'", "Movies", "IMDB_ID = '%s'"%(re.search('title\/(tt[0-9]*)', str(x)).group(1), ))
-        update_untitled("LastTime = %s "%((len(list_of_films)), ), "Trackers", "ID=3")
+        update_untitled("LastTime = %s "%(count_of_films_IMDB, ), "Trackers", "ID=3")
     return
 
 
@@ -70,7 +80,6 @@ class Tracker:
         self.page_size = 50
         self.current_last_time = 0
         self.previous_last_time = select_untitled("LastTime", "Trackers", "ID=%s"%(self.ID, ))[0][0]
-        print self.previous_last_time
 
     def readtime(self):
         print "Previous_time %s" % (self.previous_last_time)
@@ -112,7 +121,6 @@ class Tracker:
                         if re.search('[a-zA-Z]+', title):
                             int_result.append({u'Russian_name' : torrent_russian_name, 'torrent_link' : torrent_link, u'object_name' : name_for_class, u'download_link' : torrent_download_link, u'Movie': title.strip().decode('utf-8'), u'Year': torrent_movie_year, u'Size': torrent_size})
                 except:
-                    print topic
                     continue
             self.gap += self.page_size
             if self.gap > 400:

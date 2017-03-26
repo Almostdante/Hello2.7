@@ -22,5 +22,5 @@ def IMDB_Search(moviename, movieyear):
                 result1['Rating'] = 0
         else:
             print moviename, 'Not Found'
-            result1 = {'Title':moviename, 'Director':'-', 'Rating':'0', 'Votes':'-', 'Metascore':'-', 'IMDB_ID':'-'}
+            result1 = {'Title':moviename, 'Director':'-', 'Rating':'0', 'Votes':'-', 'Metascore':'--', 'IMDB_ID':'-'}
     return result1
